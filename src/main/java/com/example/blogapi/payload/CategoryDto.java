@@ -15,6 +15,8 @@ import javax.validation.constraints.NotEmpty;
 public class CategoryDto {
 
     int categoryId;
+    @NotEmpty(message = "must have title")
     String categoryTitle;
+    @NotEmpty(message = "must have description")
     String categoryDescription;
 }

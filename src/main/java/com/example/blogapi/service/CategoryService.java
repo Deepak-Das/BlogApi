@@ -5,9 +5,10 @@ import com.example.blogapi.payload.CategoryDto;
 import java.util.List;
 
 public interface CategoryService {
-    CategoryDto createCategory(CategoryDto userDto);
-    CategoryDto updateCategory(CategoryDto userDto,Integer userId);
-    CategoryDto getCategoryById(Integer userId);
+    CategoryDto createCategory(CategoryDto categoryDto);
+    CategoryDto updateCategory(CategoryDto categoryDto,Integer userId);
+    CategoryDto getCategoryById(Integer categoryId);
     List<CategoryDto> getAllCategories();
-    void deleteCategory(Integer userId);
+
+    void deleteCategory(Integer categoryId);
 }

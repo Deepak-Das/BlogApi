@@ -17,11 +17,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer categoryId;
 
-    @NotEmpty(message = "Must have title")
     @Column(name = "title")
     String categoryTitle;
 
-    @NotEmpty(message = "Must have description")
     @Column(name = "description")
     String categoryDescription;
 }
