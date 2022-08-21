@@ -6,20 +6,26 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Integer categoryId;
+    private Integer categoryId;
 
-    @Column(name = "title")
-    String categoryTitle;
+    @Column(name = "title",nullable = false)
+    private String categoryTitle;
 
-    @Column(name = "description")
-    String categoryDescription;
+    @Column(name = "description" )
+    private String categoryDescription;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Post> posts = new HashSet<>();
+
 }

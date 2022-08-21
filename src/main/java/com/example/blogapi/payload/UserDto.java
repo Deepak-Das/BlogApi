@@ -14,21 +14,21 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 public class UserDto {
-    int id;
+    private int userId;
     @NotNull(message = "Null value not allowed")
     @Size(min = 4, message = "word length must have 4 letter")
-    String name;
+    private String name;
     @Email(message = "invalid email")
     @NotNull(message = "Null value not allowed")
-    String email;
+    private String email;
     @NotNull(message = "password must be provided")
-    String password;
-    String about;
+    private String password;
+    private String about;
 
     @Override
     public String toString() {
         return "UserDto{" +
-                "id=" + id +
+                "id=" + userId +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +

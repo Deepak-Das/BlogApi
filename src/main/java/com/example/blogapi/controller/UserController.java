@@ -1,6 +1,7 @@
 package com.example.blogapi.controller;
 
 
+import com.example.blogapi.payload.ApiResponse;
 import com.example.blogapi.payload.UserDto;
 import com.example.blogapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +43,15 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer id) {
         UserDto user = userService.updateUser(userDto, id);
-        userDto.setId(id);
+        userDto.setUserId(id);
 
         return new ResponseEntity<>(user, HttpStatus.FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
+    public ApiResponse deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
-        return new ResponseEntity<>("Status: Deleted", HttpStatus.FOUND);
+        return new ApiResponse("User deleted","null");
     }
 
 

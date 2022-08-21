@@ -1,5 +1,6 @@
 package com.example.blogapi.controller;
 
+import com.example.blogapi.payload.ApiResponse;
 import com.example.blogapi.payload.CategoryDto;
 import com.example.blogapi.service.Imp.CategoryServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,8 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Integer id) {
+    public ApiResponse deleteCategory(@PathVariable Integer id) {
         serviceImp.deleteCategory(id);
-        return new ResponseEntity<>("Status: Deleted", HttpStatus.FOUND);
-    }
+        return new ApiResponse("Category deleted","null");    }
 
 }
