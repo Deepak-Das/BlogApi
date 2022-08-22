@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -110,4 +111,14 @@ public class PostServiceImp implements PostService {
         List<PostDto> postDtos = posts.stream().map(post -> modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
         return postDtos;
     }
+
+    @Override
+    public List<PostDto> searchByTitle(String keyword) {
+        List<Post> posts=postRepo.findByTitleContaining(keyword);
+        List<PostDto> dtos=posts.stream().map(post -> modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+
+        return dtos;
+    }
+
+
 }
