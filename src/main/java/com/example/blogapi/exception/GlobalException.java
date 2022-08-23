@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ public class GlobalException {
         return new  ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
+    //validation Exception handler
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String,String>> methodArgumentNotValidException(MethodArgumentNotValidException ex){
         Map<String,String> apiResponse = new HashMap<>();
@@ -32,6 +35,14 @@ public class GlobalException {
         );
 
         return new  ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+    }
+
+    //file not found exception
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ApiResponse> fileNotFoundException(FileNotFoundException ex){
+        ApiResponse apiResponse=new ApiResponse("File either not upload or may deleted","Not Found");
+
+        return new ResponseEntity<>(apiResponse,HttpStatus.FOUND);
     }
 
 
