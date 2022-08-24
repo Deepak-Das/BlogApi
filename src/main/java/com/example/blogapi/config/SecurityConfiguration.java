@@ -1,16 +1,23 @@
 package com.example.blogapi.config;
 
-import com.example.blogapi.security.CustomUserDetailService;
+import com.example.blogapi.security.JwtAuthenticationFilter;
+import com.example.blogapi.security.Jwt_AuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -20,7 +27,13 @@ public class SecurityConfiguration {
 
 
     @Autowired
-    private CustomUserDetailService customUserDetailService;
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private Jwt_AuthenticationEntryPoint jwt_authenticationEntryPoint;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 
     @Bean
@@ -35,12 +48,23 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests(
-                        (authz) -> authz.anyRequest()
-                                .authenticated()
+                        (authz) -> {
+                            try {
+                                authz.anyRequest()
+                                        .authenticated()
+                                        .and()
+                                        .exceptionHandling().authenticationEntryPoint(this.jwt_authenticationEntryPoint)
+                                        .and()
+                                        .sessionManagement()
+                                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
 
                 )
                 .httpBasic(Customizer.withDefaults())
-                .userDetailsService(customUserDetailService);
+                .userDetailsService(userDetailsService).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 
 
@@ -54,6 +78,10 @@ public class SecurityConfiguration {
     }
 
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
 
 

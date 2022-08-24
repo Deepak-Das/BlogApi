@@ -1,4 +1,4 @@
-package com.example.blogapi.security;
+package com.example.blogapi.service.Imp;
 
 import com.example.blogapi.model.User;
 import com.example.blogapi.repository.UserRepo;

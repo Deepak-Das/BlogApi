@@ -1,15 +1,22 @@
 package com.example.blogapi.controller;
 
 import com.example.blogapi.exception.DublicateDataFound;
+import com.example.blogapi.model.JwtAuthResponse;
+import com.example.blogapi.model.JwtRequest;
 import com.example.blogapi.model.User;
 import com.example.blogapi.payload.UserDto;
 import com.example.blogapi.repository.RoleRepo;
 import com.example.blogapi.repository.UserRepo;
+import com.example.blogapi.security.JwtHelper;
 import com.example.blogapi.util.AppConstants;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +28,19 @@ public class ApiAuthController {
 
     @Autowired
     private UserRepo userRepo;
-
     @Autowired
     private RoleRepo roleRepo;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtHelper jwtHelper;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -61,6 +75,25 @@ public class ApiAuthController {
     }
 
 
+
+    @PostMapping("/login")
+    public ResponseEntity<JwtAuthResponse> create(@RequestBody JwtRequest request){
+        this.authenticate(request.getUserName(),request.getPassWord());
+        UserDetails userDetails=userDetailsService.loadUserByUsername(request.getUserName());
+
+        String token=jwtHelper.generateToken(userDetails);
+
+        JwtAuthResponse response=new JwtAuthResponse();
+        response.setToken(token);
+        return new ResponseEntity<>(response,HttpStatus.CREATED);
+    }
+
+    private void authenticate(String userName, String passWord) {
+
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken=new UsernamePasswordAuthenticationToken(userName,passWord);
+
+        this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+    }
 
 
 }
