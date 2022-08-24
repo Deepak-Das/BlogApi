@@ -44,6 +44,12 @@ public class GlobalException {
 
         return new ResponseEntity<>(apiResponse,HttpStatus.FOUND);
     }
+    @ExceptionHandler(DublicateDataFound.class)
+    public ResponseEntity<ApiResponse> DublicateDataFoundException(DublicateDataFound ex){
+        ApiResponse apiResponse=new ApiResponse(ex.getMessage(), ex.getError_status());
+
+        return new ResponseEntity<>(apiResponse,HttpStatus.FOUND);
+    }
 
 
 }
