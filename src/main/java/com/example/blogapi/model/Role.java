@@ -21,4 +21,12 @@ public class Role {
     private int roleId;
 
     private String type;
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "roleId=" + roleId +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

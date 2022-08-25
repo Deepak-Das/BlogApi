@@ -2,9 +2,11 @@ package com.example.blogapi.config;
 
 import com.example.blogapi.security.JwtAuthenticationFilter;
 import com.example.blogapi.security.Jwt_AuthenticationEntryPoint;
+import com.example.blogapi.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
@@ -42,8 +44,9 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests()
-                .antMatchers("/api/auth/**")
-                .permitAll()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers(HttpMethod.DELETE,"/api/users/{id}").hasAnyAuthority(AppConstants.ADMIN_USER)
+                .antMatchers(HttpMethod.POST,"/api/users/").hasAnyAuthority(AppConstants.ADMIN_USER)
                 .and()
                 .csrf()
                 .disable()

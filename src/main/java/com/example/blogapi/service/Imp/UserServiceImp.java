@@ -52,6 +52,8 @@ public class UserServiceImp implements UserService {
     @Override
     public void deleteUser(Integer userId) {
         User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+//        System.out.println(user.toString());
+        user.getRoles().removeAll(user.getRoles());
         userRepo.deleteById(userId);
     }
 
